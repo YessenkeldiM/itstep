@@ -1,0 +1,14 @@
+
+{{ name }}
+{# <a href="{% url 'detail' question_id=2 %}"> hello</a> #}
+{# <a href="{% url 'polls:detail' question_id=2 %}"> hello</a> #}
+ <a href="{% url 'pollsNamespace:detail' question_id=2 %}"> hello</a>
+{% if questions %}
+    <ul>
+    {% for question in questions %}
+        <li><a href="/polls/{{ question.id }}/">{{ question }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}
