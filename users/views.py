@@ -1,5 +1,6 @@
 from django.shortcuts import render, HttpResponse
 from .forms import UserForm
+from django.views.generic import CreateView
 
 # Create your views here.
 
@@ -7,8 +8,9 @@ from .forms import UserForm
 def index(request):
     user_form = UserForm()
     context = {'form': user_form}
-    return HttpResponse('Hello world')
+    # return HttpResponse('Hello world')
     return render(request, 'users/index.html', context)
+
 
 
 def add_user(request):

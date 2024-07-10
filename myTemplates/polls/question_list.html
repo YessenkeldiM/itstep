@@ -1,0 +1,6 @@
+
+{% for q in object_list %}
+    <li>{{q.id}}   {{ q }}</li>
+    <a href="{% url 'polls:delete-question' pk=q.id %}"> Delete</a>
+    <a href="{% url 'polls:update-question' pk=q.id %}"> Update</a>
+{% endfor %}
