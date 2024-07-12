@@ -19,6 +19,9 @@ def index(request):
         res = res + str(getattr(request,i)) + ', '
     return HttpResponse(res)
 
+def experiment(request):
+    return render(request, 'polls/base.html')
+
 def detail(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     return render(request, "polls/detail.html", {"question": question})

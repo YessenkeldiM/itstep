@@ -1,7 +1,17 @@
+{% extends 'polls/base.html' %}
+{% block title %}
+    <title>Polls - delete page</title>
+{% endblock title %}
+
+{% block content %}
+<div class='container'>
 <h1>{{ message }}</h1>
  <form action="" method="post"> 
     {% csrf_token %}
+    
     <p>Are you sure you want to delete "{{ object }}"?</p>
     {{ form.as_p }}
     <input type="submit" value="Submit">
 </form>
+</div>
+{% endblock content %}

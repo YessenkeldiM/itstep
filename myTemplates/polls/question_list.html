@@ -1,6 +1,19 @@
+{% extends 'polls/base.html' %}
 
-{% for q in object_list %}
-    <li>{{q.id}}   {{ q }}</li>
+{% block title %}
+    <title>Polls - create page</title>
+{% endblock title %}
+
+{% block content %}
+
+
+<div class="container">
+    {% for q in object_list %}
+    <li><b>{{q.id}}</b> {{ q }}
     <a href="{% url 'polls:delete-question' pk=q.id %}"> Delete</a>
-    <a href="{% url 'polls:update-question' pk=q.id %}"> Update</a>
-{% endfor %}
+    <a href="{% url 'polls:update-question' pk=q.id %}"> Update</a></li>
+    {% endfor %}
+</div>
+
+
+{% endblock content %}
