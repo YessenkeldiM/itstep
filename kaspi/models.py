@@ -5,7 +5,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.utils.timezone import now
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
-from django.contrib.postgres.fields import DateRangeField
+# from django.contrib.postgres.fields import DateRangeField
 
 from datetime import date
 
@@ -17,7 +17,7 @@ class KaspiObject(models.Model):
     name = models.CharField(max_length=256)
     description = models.CharField(max_length=256, null=True, blank=True)
     create_date = models.DateField(default=now)
-    active_in = DateRangeField(verbose_name='Активно в промежутке', default=(now, '2024-12-12'))
+    # active_in = DateRangeField(verbose_name='Активно в промежутке', default=(now, '2024-12-12'))
     
 
     class Meta:
