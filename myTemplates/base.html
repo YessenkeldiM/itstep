@@ -1,4 +1,5 @@
-{% load static %}
+<!-- {% load static %} -->
+ {% load bootstrap4 %}
 <!doctype html>
 <html lang="en" class="h-100" data-bs-theme="auto">
   <head><script src="../assets/js/color-modes.js"></script>
@@ -12,13 +13,15 @@
     <title>Sticky Footer Navbar Template · Bootstrap v5.3</title>
     {% endblock title %}
 
+    {% bootstrap_css %}
+
     <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/sticky-footer-navbar/">
 
     
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
 
-<link href="{% static 'bootstrap.min.css' %}" rel="stylesheet">
+<!-- <link href="{% static 'bootstrap.min.css' %}" rel="stylesheet"> -->
 
     <style>
       .bd-placeholder-img {
@@ -175,7 +178,23 @@
           <li class="nav-item">
             <a class="nav-link disabled" aria-disabled="true">With choices</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" aria-disabled="true">With</a>
+          </li>
         </ul>
+        <div><h1>hello</h1></div>
+        {% if user.is_authenticated %}
+        <form action="{% url 'users:logout' %}" method="post">
+          {% csrf_token %}
+          <button type="submit">Log out</button>
+        </form>
+        <a class="navbar-brand" href="{% url 'users:password-change' %}">Update password</a>
+        {% else %}
+        <a href="{% url "social:begin" "google-oauth2" %}">Google+</a>
+        <a href="{% url "social:begin" "instagram-oauth2" %}">Instagram</a>
+        <a class="navbar-brand" href="{% url 'users:login' %}">Login</a>
+        <a class="navbar-brand" href="{% url 'users:register' %}">Register</a>
+        {% endif %}
         <form class="d-flex" role="search">
           <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
           <button class="btn btn-outline-success" type="submit">Search</button>

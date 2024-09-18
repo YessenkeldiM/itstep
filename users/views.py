@@ -1,6 +1,8 @@
 from django.shortcuts import render, HttpResponse
 from .forms import UserForm
 from django.views.generic import CreateView
+from django.contrib.auth.models import User
+from django.urls import reverse_lazy
 
 # Create your views here.
 
@@ -10,6 +12,12 @@ def index(request):
     context = {'form': user_form}
     # return HttpResponse('Hello world')
     return render(request, 'users/index.html', context)
+
+class RegisterView(CreateView):
+    template_name = 'polls/create.html'
+    model = User
+    success_url = reverse_lazy('polls:question-list')
+    fields = ['username', 'password']
 
 
 

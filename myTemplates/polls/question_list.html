@@ -1,4 +1,5 @@
-{% extends 'polls/base.html' %}
+{% extends 'base.html' %}
+{% load bootstrap4 %}
 
 {% block title %}
     <title>Polls - create page</title>
@@ -8,11 +9,36 @@
 
 
 <div class="container">
-    {% for q in object_list %}
+    
+    <h1>{{ page_obj.number }}</h1>
+
+    {% for q in object_list|dictsortreversed:'pk' %}
     <li><b>{{q.id}}</b> {{ q }}
     <a href="{% url 'polls:delete-question' pk=q.id %}"> Delete</a>
-    <a href="{% url 'polls:update-question' pk=q.id %}"> Update</a></li>
+    <a href="{% url 'polls:update-question' pk=q.id %}"> Update</a></l>
+    {% empty %}
+    <h1>No quesitons availiable</h1>
     {% endfor %}
+
+    <!-- <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+    
+            <span class="current">
+                {{ page_obj }}
+            </span>
+        
+    
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div> -->
+    {% bootstrap_pagination page_obj %}
 </div>
 
 

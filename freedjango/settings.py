@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,10 +23,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-nf+g%(^53@@@iqf&g!smjyoem&tuw%lwxc^o0%7+9hielxwnnl'
 
+SECURE_PROXY_SSL_HEADER = 'secured'
+
+X_FRAME_OPTIONS = 'sameorigin'
+
+SECURE_REFERRER_POLICY = 'no-referrer'
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['asd', '*']
+
+ADMINS = ['miras.esenkeldy@gmail.com', 'etc']  
+
+MANAGERS = []
 
 
 # Application definition
@@ -37,19 +48,42 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.postgres',
+
+    'captcha',
+    'social_django',
+    'bootstrap4',
+    'rest_framework',
+    'corsheaders',
+    'rest_framework_simplejwt',
+
     'polls',
     'users',
+    'kaspi',
+    'userprofile'
+]
+
+AUTHENTICATION_BACKENDS = [
+    'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.instagram.InstagramOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'django.middleware.cache.UpdateCacheMiddleware',
+    # 'django.middleware.common.CommonMiddleware',
+    # 'django.middleware.cache.FetchFromCacheMiddleware',
 ]
+
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 ROOT_URLCONF = 'freedjango.urls'
 
@@ -65,7 +99,10 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect'
             ],
+            'libraries': {'ft': 'freedjango.templatetags.filtersandtags'}
         },
     },
 ]
@@ -110,9 +147,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Almaty'
 
 USE_I18N = True
 
@@ -128,7 +165,60 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / "media"
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+#CAPTCHA
+CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
+CAPTCHA_IMAGE_SIZE = (100,100)
+CAPTCHA_BACKGROUND_COLOR = 'white'
+
+#SOCIAL_AUTH
+SOCIAL_AUTH_URL_NAMESPACE = 'social'
+
+
+LOGIN_URL = '/users/login/'
+
+LOGIN_REDIRECT_URL = '/polls/questions/'
+
+#CACHE
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': 'redis://redis-16492.c1.asia-northeast1-1.gce.redns.redis-cloud.com:16492',
+        'OPTIONS': {
+            'password': 'BYuY3nToNR2ZjomQYs3GGm5NSoDnNdgd',
+        }
+    },
+    'session_storage': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': 'redis://redis-16492.c1.asia-northeast1-1.gce.redns.redis-cloud.com:16492',
+        'OPTIONS': {
+            'password': 'BYuY3nToNR2ZjomQYs3GGm5NSoDnNdgd',
+        }
+    }
+}
+
+# CACHE_MIDDLEWARE_ALIAS = 'default'
+# CACHE_MIDDLEWARE_SECONDS = 30
+# CACHE_MIDDLEWARE_KEY_PREFIX = 'my-prefix'
+
+
+#REST
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+
+#SimpleJWT
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=1),
+}

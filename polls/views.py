@@ -3,7 +3,7 @@ from django.db.models.base import Model as Model
 from django.db.models.query import QuerySet
 from django.shortcuts import get_object_or_404, render, HttpResponse, redirect
 from .models import Question, Choice
-from .forms import QuestionForm
+from .forms import QuestionForm, QuestionSearchForm, searchFactory
 from django.db.models import Count, Min
 from django.urls import reverse, reverse_lazy
 from django.http import HttpResponseNotFound, HttpResponseForbidden, Http404
@@ -12,6 +12,8 @@ from django.views.generic.base import TemplateView, RedirectView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic import FormView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.decorators.cache import cache_page
 
 def index(request):
     res = ''
@@ -19,15 +21,21 @@ def index(request):
         res = res + str(getattr(request,i)) + ', '
     return HttpResponse(res)
 
+# @cache_page(20)
 def experiment(request):
-    return render(request, 'polls/base.html')
+    questionForm = QuestionSearchForm(field_order=('question', 'keyword'))
+    context = {'form': questionForm}
+    # return HttpResponse('Hello world')
+    return render(request, 'polls/experiment.html', context)
 
 def detail(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     return render(request, "polls/detail.html", {"question": question})
 
 def all_hello(request):
-    return HttpResponse('This is all HELLO VIEW!')
+    r = HttpResponse('This is all HELLO VIEW!')
+    r.set_cookie()
+    return r
 
 def all(request):
     return HttpResponse('This is all VIEW!')
@@ -155,12 +163,14 @@ class QuestionUpdateView(UpdateView):
     fields = ['question_text']
     success_url = reverse_lazy('polls:question-list')
 
-class QuestionDeleteView(DeleteView):
+class QuestionDeleteView(LoginRequiredMixin, DeleteView):
+    login_url = reverse_lazy('users:login')
     template_name = 'polls/delete.html'
     model = Question
     success_url = reverse_lazy('polls:question-list')
 
 class QuestionListView(ListView):
+    paginate_by = 4
     template_name = 'polls/question_list.html'
     model = Question
 
